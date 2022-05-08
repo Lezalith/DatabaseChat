@@ -1,5 +1,5 @@
 ﻿# Imports
-init -1 python:
+init -20 python:
 
     # Database Interaction
     import pymongo
@@ -11,9 +11,6 @@ init -1 python:
     import ssl
     import urllib
 
-    def getPassword():
-        return open("pass.txt").read()
-
 # Test
 init python:
 
@@ -23,7 +20,7 @@ init python:
     # Connection info
     connectionProtocol = "mongodb+srv"
     userName = "doadmin"
-    userPass = getPassword()
+    userPass = open("pass.txt").read()
     hostName = "db-mongodb-lon1-02074-eea89e0c.mongo.ondigitalocean.com"
 
     # URI put together
@@ -70,6 +67,56 @@ init python:
 # {u'_id': 1, u'string': u'two'}
 # {u'_id': 2, u'string': u'three'}
 # {u'_id': 3, u'string': u'four'}
+
+# Datetime stuff
+init -16 python:
+
+    import datetime
+
+    # Uses strftime to convert datetime object into a string
+    def timeToStr(timeGiven):
+        pass
+
+    # Uses strptime to convert string into a datetime object 
+    def strToTime(stringGiven):
+        pass 
+
+# Chat and Message Class
+init -15 python:
+
+    # Core class.
+    # channel - a string, name of a collection in the database
+    class Chat():
+
+        def __init__(channel):
+
+            self.channel = channel
+            self.messages = []
+
+    # Message class.
+    # author - string, nick of the sender
+    # content - string, content of the message
+    # time - datetime object of sending # TODO: Maybe could be defined inside the __init__ directly?
+    class Message():
+
+        def __init__(author, content, time):
+
+            self.author = author
+            self.content = content
+            self.time = time
+
+        # Transforms the object into a dict that can be inserted into a collection.
+        def toDocument():
+
+            return { "author" : self.author,
+            "content" : self.content,
+            "time" : timeToStr(self.time)
+            }
+
+    # Creates a Message object from a document from a collection.
+    def MessageFromDocument(doc):
+
+        return Message( doc["author"], doc["content"], strToTime(doc["time"]) )
 
 label start:
 

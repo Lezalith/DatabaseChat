@@ -48,6 +48,10 @@ init -15 python:
 
             return messages
 
+        def reloadMessages(self):
+
+            self.messages = self.pullAllMessages()
+
     # Message class.
     # author - string, nick of the sender
     # content - string, content of the message
@@ -67,6 +71,9 @@ init -15 python:
             "content" : self.content,
             "time" : timeToStr(self.time)
             }
+
+        def __str__(self):
+            return "{} - {}: {}".format( timeToStr(self.time), self.author, self.content )
 
     # Creates a Message object from a document from a collection.
     def MessageFromDocument(doc):
@@ -139,14 +146,23 @@ screen chatScreen():
         xysize (1060, 540)
         yoffset -40
 
+        vbox:
+
+            xalign 0.5
+            spacing 15
+
+            for message in mainChat.messages:
+
+                text str(message)
+
     # Buttons
     hbox:
 
         align (0.5, 0.9)
         yoffset 30
 
-        textbutton "Hello world.":
-            action NullAction()
+        textbutton "Reload messages.":
+            action Function(mainChat.reloadMessages)
 
 label start:
 

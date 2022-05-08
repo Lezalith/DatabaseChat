@@ -75,11 +75,11 @@ init -16 python:
 
     # Uses strftime to convert datetime object into a string
     def timeToStr(timeGiven):
-        pass
+        return timeGiven.strftime("%A %d, %H:%M:%S")
 
     # Uses strptime to convert string into a datetime object 
     def strToTime(stringGiven):
-        pass 
+        pass datetime.strptime(stringGiven, "%A %d, %H:%M:%S")
 
 # Chat and Message Class
 init -15 python:

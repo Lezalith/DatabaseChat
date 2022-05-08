@@ -130,6 +130,26 @@ init python:
 # {u'_id': 2, u'string': u'three'}
 # {u'_id': 3, u'string': u'four'}
 
+screen chatScreen():
+
+    # Chat frame
+    frame:
+
+        align (0.5, 0.5)
+        xysize (1060, 540)
+        yoffset -40
+
+    # Buttons
+    hbox:
+
+        align (0.5, 0.9)
+        yoffset 30
+
+        textbutton "Hello world.":
+            action NullAction()
+
 label start:
+
+    call screen chatScreen
 
     return

@@ -22,7 +22,7 @@ init -16 python:
 
     # Uses strptime to convert string into a datetime object 
     def strToTime(stringGiven):
-        pass datetime.strptime(stringGiven, "%A %d, %H:%M:%S")
+        return datetime.strptime(stringGiven, "%A %d, %H:%M:%S")
 
 # Chat and Message Class
 init -15 python:
@@ -31,7 +31,7 @@ init -15 python:
     # channel - a string, name of a collection in the database
     class Chat():
 
-        def __init__(channel):
+        def __init__(self, channel):
 
             self.channel = channel
             self.messages = []
@@ -42,14 +42,14 @@ init -15 python:
     # time - datetime object of sending # TODO: Maybe could be defined inside the __init__ directly?
     class Message():
 
-        def __init__(author, content, time):
+        def __init__(self, author, content, time):
 
             self.author = author
             self.content = content
             self.time = time
 
         # Transforms the object into a dict that can be inserted into a collection.
-        def toDocument():
+        def toDocument(self):
 
             return { "author" : self.author,
             "content" : self.content,
@@ -57,7 +57,7 @@ init -15 python:
             }
 
     # Creates a Message object from a document from a collection.
-    def MessageFromDocument(doc):
+    def MessageFromDocument(self, doc):
 
         return Message( doc["author"], doc["content"], strToTime(doc["time"]) )
 
@@ -66,7 +66,7 @@ init -15 python:
 init python:
 
     # Variable that runs the test.
-    testItOut = False 
+    testItOut = True 
 
     # Connection info
     connectionProtocol = "mongodb+srv"
@@ -87,16 +87,12 @@ init python:
     mainCollection = mainDatabase["MyCollection"]
 
     # Insert example
-    toBeInserted = []
-    
-    for i, x in enumerate(["one", "two", "three", "four"]):
-
-        toBeInserted.append( {"_id" : i, "string" : x} )
+    a = Message("Karen", "I like birds!", datetime.datetime.now())
 
     # Can be used once to try inserting something.
     if testItOut:
 
-        mainCollection.insert_many(toBeInserted)
+        mainCollection.insert_one( a.toDocument() )
 
 # Whole thing was tested through a terminal with this query (also in query.txt):
 

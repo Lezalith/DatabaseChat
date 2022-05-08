@@ -22,7 +22,7 @@ init -16 python:
 
     # Uses strptime to convert string into a datetime object 
     def strToTime(stringGiven):
-        return datetime.strptime(stringGiven, "%A %d, %H:%M:%S")
+        return datetime.datetime.strptime(stringGiven, "%A %d, %H:%M:%S")
 
 # Chat and Message Class
 init -15 python:
@@ -35,6 +35,18 @@ init -15 python:
 
             self.channel = channel
             self.messages = []
+
+        def pullAllMessages(self):
+
+            allDocs = [doc for doc in store.mainCollection.find()]
+
+            messages = []
+
+            for doc in allDocs:
+
+                messages.append( MessageFromDocument(doc) )
+
+            return messages
 
     # Message class.
     # author - string, nick of the sender
@@ -57,20 +69,22 @@ init -15 python:
             }
 
     # Creates a Message object from a document from a collection.
-    def MessageFromDocument(self, doc):
+    def MessageFromDocument(doc):
 
         return Message( doc["author"], doc["content"], strToTime(doc["time"]) )
 
+# Same name as the collection chosen inside the database.
+default mainChat = Chat("mainChannel")
 
 # Test
 init python:
 
     # Variable that runs the test.
-    testItOut = True 
+    testItOut = False 
 
     # Connection info
     connectionProtocol = "mongodb+srv"
-    userName = "doadmin"
+    userName = "ChatClient"
     userPass = open("pass.txt").read()
     hostName = "db-mongodb-lon1-02074-eea89e0c.mongo.ondigitalocean.com"
 
@@ -78,13 +92,14 @@ init python:
     uri = "{}://{}:{}@{}".format( connectionProtocol, urllib.quote_plus(userName) , urllib.quote_plus(userPass) , hostName )
 
     # Connecting
+    # TODO: This reeeallly might need to get defaulted.
     dbClient = pymongo.MongoClient( uri, ssl_cert_reqs= ssl.CERT_NONE )
 
     print("I successfully connected!")
 
     # Inside
-    mainDatabase = dbClient.client["admin"]
-    mainCollection = mainDatabase["MyCollection"]
+    mainDatabase = dbClient.client["ChatDatabase"]
+    mainCollection = mainDatabase["mainChannel"]
 
     # Insert example
     a = Message("Karen", "I like birds!", datetime.datetime.now())

@@ -16,6 +16,12 @@ init -16 python:
 
     import datetime
 
+    # TODO: Inaccurate day display, because of only partial data.
+    # Given time of:
+    # 2022-05-10 00:15:32.957221
+    # Running it through timeToStr and back through strToTime results in:
+    # 1900-01-10 00:15:32
+
     # Uses strftime to convert datetime object into a string
     def timeToStr(timeGiven):
         return timeGiven.strftime("%A %d, %H:%M:%S")
@@ -52,6 +58,25 @@ init -15 python:
 
             self.messages = self.pullAllMessages()
 
+        # Add a message to database and my own messages
+        def sendMessage(self, content):
+
+            # TODO: Currently static author.
+            message = Message( "Static Author", content, datetime.datetime.now() )
+
+            self.messages.append(message)
+
+            mainCollection.insert_one( message.toDocument() )
+
+        # Clear the database and all my own messages.
+        def clear(self):
+
+            self.messages = []
+
+            mainCollection.drop()
+
+
+
     # Message class.
     # author - string, nick of the sender
     # content - string, content of the message
@@ -87,7 +112,7 @@ default mainChat = Chat("mainChannel")
 init python:
 
     # Variable that runs the test.
-    testItOut = False 
+    testItOut = True 
 
     # Connection info
     connectionProtocol = "mongodb+srv"
@@ -109,7 +134,7 @@ init python:
     mainCollection = mainDatabase["mainChannel"]
 
     # Insert example
-    a = Message("Karen", "I like birds!", datetime.datetime.now())
+    a = Message("Meep", "Gimme lettuce.", datetime.datetime.now())
 
     # Can be used once to try inserting something.
     if testItOut:
@@ -155,15 +180,17 @@ screen chatScreen():
 
                 text str(message)
 
+    default messageInput = "Default of the message."
+
     frame:
 
         align (0.5, 1.0)
         offset (-100, -90)
         xysize (860, 70)
 
-        text "This is ready for a really long input like seriously okay"
-
-    default messageInput = ""
+        input:
+            value ScreenVariableInputValue("messageInput")
+            pixel_width 800
 
     textbutton "Send":
 
@@ -174,16 +201,20 @@ screen chatScreen():
         xysize (140, 70)
         text_align (0.5, 0.5)
 
-        action NullAction()
+        action Function(mainChat.sendMessage, messageInput), SetScreenVariable("messageInput", "Default of the message.")
 
     # Buttons
     hbox:
 
         align (0.5, 0.9)
         yoffset 30
+        spacing 50
 
         textbutton "Reload messages.":
             action Function(mainChat.reloadMessages)
+
+        textbutton "Clear the chat.":
+            action Function(mainChat.clear)
 
 label start:
 

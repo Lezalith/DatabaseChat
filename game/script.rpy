@@ -143,8 +143,8 @@ screen chatScreen():
     frame:
 
         align (0.5, 0.5)
-        xysize (1060, 540)
-        yoffset -40
+        xysize (1060, 500)
+        yoffset -80
 
         vbox:
 
@@ -154,6 +154,27 @@ screen chatScreen():
             for message in mainChat.messages:
 
                 text str(message)
+
+    frame:
+
+        align (0.5, 1.0)
+        offset (-100, -90)
+        xysize (860, 70)
+
+        text "This is ready for a really long input like seriously okay"
+
+    default messageInput = ""
+
+    textbutton "Send":
+
+        background Solid("ddd")
+
+        align (0.5, 1.0)
+        offset (460, -90)
+        xysize (140, 70)
+        text_align (0.5, 0.5)
+
+        action NullAction()
 
     # Buttons
     hbox:

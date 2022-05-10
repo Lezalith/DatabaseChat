@@ -1,18 +1,23 @@
+Python 2.7.16 (v2.7.16:413a49145e, Mar  4 2019, 01:37:19) [MSC v.1500 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
 >>> import pymongo
 >>> import ssl
 >>> import urllib
 >>> connectionProtocol = "mongodb+srv"
 >>> userName = "doadmin"
->>> userPass = "od3x8it52qQ047I9"
+>>> userPass = "CHANGEDSINCELASTTIME"
 >>> hostName = "db-mongodb-lon1-02074-eea89e0c.mongo.ondigitalocean.com"
 >>> uri = "{}://{}:{}@{}".format( connectionProtocol, urllib.quote_plus(userName) , urllib.quote_plus(userPass) , hostName )
 >>> dbClient = pymongo.MongoClient( uri, ssl_cert_reqs= ssl.CERT_NONE )
->>> mainDatabase = dbClient.client["admin"]
->>> mainCollection = mainDatabase["MyCollection"]
+>>> mainDatabase = dbClient.client["ChatDatabase"]
+>>> mainCollection = mainDatabase["mainChannel"]
 >>> for result in mainCollection.find():
 ...     print(result)
-
-{u'_id': 0, u'string': u'one'}
-{u'_id': 1, u'string': u'two'}
-{u'_id': 2, u'string': u'three'}
-{u'_id': 3, u'string': u'four'}
+...
+{u'content': u'Gimme lettuce.', u'_id': ObjectId('6279939ebbf5533ca96f26cd'), u'time': u'Tuesday 10, 00:20:14', u'author': u'Meep'}
+{u'content': u'Gimme lettuce.', u'_id': ObjectId('62799464bbf5533ca96f26cf'), u'time': u'Tuesday 10, 00:23:32', u'author': u'Meep'}
+{u'content': u'Gimme lettuce.', u'_id': ObjectId('6279957fa168a37720d3f7e8'), u'time': u'Tuesday 10, 00:28:15', u'author': u'Meep'}
+{u'content': u'Just sent the code to Uncle Code.', u'_id': ObjectId('627995be2d0cabb9dd284e3b'), u'time': u'Tuesday 10, 00:29:18', u'author': u'Static Author'}
+{u'content': u'This is a message from <Code/>', u'_id': ObjectId('62799a1e603fe2485d1efb72'), u'time': u'Monday 09, 23:47:58', u'author': u'Static Author'}
+{u'content': u'Kinda cool.', u'_id': ObjectId('62799a2576640faf91b9e6d9'), u'time': u'Tuesday 10, 00:48:05', u'author': u'Static Author'}
+{u'content': u'Yep, nice. Now you just have to set an interval to call reload messages.', u'_id': ObjectId('62799a7d603fe2485d1efb73'), u'time': u'Monday 09, 23:49:33', u'author': u'Static Author'}
